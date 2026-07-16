@@ -1,39 +1,458 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>시그널스톡</title>
+<title>시그널스톡 — 뭘 사고, 뭘 팔고, 왜?</title>
+<meta name="description" content="한국 주식 3,700여 종목을 매일 저녁 대신 스크리닝해 오늘의 매수·청산 신호와 그 근거를 알려주는 정보 제공 앱. iOS App Store 심사 중.">
+<meta property="og:title" content="시그널스톡 — 뭘 사고, 뭘 팔고, 왜?">
+<meta property="og:description" content="매일 저녁, 한국 주식 전 종목을 대신 살펴보고 신호와 이유를 알려드립니다.">
+<meta property="og:type" content="website">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
-  :root { color-scheme: light dark; }
-  body { font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; line-height: 1.7;
-         max-width: 640px; margin: 0 auto; padding: 48px 20px 64px; color: #0E1726; background: #F6F8FB; }
-  @media (prefers-color-scheme: dark) { body { color: #EAF0F7; background: #0B1220; } h1 { color: #EAF0F7; } .sub, .card p { color: #8593A8; } .card { background: #111A2B; border-color: #223047; } a { color: #2DD4BF; } }
-  h1 { font-size: 26px; margin: 16px 0 4px; }
-  .logo { display: flex; align-items: flex-end; gap: 4px; height: 48px; }
-  .c { width: 12px; border-radius: 3px; background: #2DD4BF; } .c1 { height: 22px; background: #3A4A63; } .c2 { height: 30px; } .c3 { height: 42px; }
-  .sub { color: #5B6B82; font-size: 15px; margin-bottom: 28px; }
-  .card { border: 1px solid #E2E8F0; background: #fff; border-radius: 14px; padding: 18px 20px; margin-bottom: 14px; }
-  .card h2 { font-size: 16px; margin: 0 0 6px; }
-  .card p { font-size: 14px; color: #5B6B82; margin: 0; }
-  a { color: #0F766E; font-weight: 600; text-decoration: none; }
-  .disclaimer { font-size: 12px; color: #8593A8; margin-top: 28px; line-height: 1.6; }
+  :root{
+    --ink:#070C15; --ink2:#0A1322; --surface:#101C33; --surface2:#0C182C;
+    --border:#1e2f49; --border2:#2a3e5c;
+    --mint:#2DE0C5; --mint2:#25c4ac; --mint-ink:#04231D;
+    --text:#F3F7FC; --muted:#9DAECA; --faint:#5D6B84;
+    --up:#3DDC84; --down:#FF6B6B;
+    --mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,monospace;
+    --maxw:1140px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{
+    font-family:'Pretendard','Apple SD Gothic Neo',sans-serif;
+    background:var(--ink); color:var(--text); line-height:1.65;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  .eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:.28em;color:var(--mint);
+    font-weight:600;text-transform:uppercase;margin-bottom:18px}
+  h2.title{font-size:clamp(28px,4.4vw,48px);font-weight:800;letter-spacing:-.03em;line-height:1.12}
+  h2.title .m{color:var(--mint)}
+  .lead{color:var(--muted);font-size:clamp(15px,1.6vw,19px);margin-top:14px;max-width:640px}
+
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;transition:background .3s,border-color .3s,backdrop-filter .3s;border-bottom:1px solid transparent}
+  nav.solid{background:rgba(7,12,21,.82);backdrop-filter:blur(14px);border-bottom-color:var(--border)}
+  .nav-in{max-width:var(--maxw);margin:0 auto;padding:16px 24px;display:flex;align-items:center;justify-content:space-between}
+  .brand{display:flex;align-items:center;gap:11px;font-weight:700;font-size:19px;letter-spacing:-.02em}
+  .brand .mk{display:flex;align-items:flex-end;gap:3px;height:24px}
+  .brand .mk i{width:6px;border-radius:2px;display:block}
+  .brand .mk .a{height:12px;background:#3a4a63}.brand .mk .b{height:18px;background:var(--mint)}.brand .mk .c{height:24px;background:var(--mint)}
+  .nav-links{display:flex;align-items:center;gap:30px}
+  .nav-links a{font-size:15px;color:var(--muted);transition:color .2s}
+  .nav-links a:hover{color:var(--text)}
+  .nav-cta{font-family:var(--mono);font-size:13px;letter-spacing:.04em;color:var(--mint);
+    border:1px solid var(--border2);border-radius:999px;padding:9px 16px;transition:border-color .2s,background .2s}
+  .nav-cta:hover{border-color:var(--mint);background:rgba(45,224,197,.08)}
+  @media(max-width:760px){.nav-links a:not(.nav-cta){display:none}}
+
+  /* HERO */
+  .hero{position:relative;padding:150px 0 90px;overflow:hidden}
+  .hero-bg{position:absolute;inset:0;z-index:0;pointer-events:none}
+  .hero-bg .glow{position:absolute;width:900px;height:760px;border-radius:50%;right:-160px;top:-140px;
+    background:radial-gradient(circle,rgba(45,224,197,.16),transparent 62%);filter:blur(30px)}
+  .hero-bg .grid{position:absolute;inset:0;opacity:.4;
+    background-image:linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px);
+    background-size:54px 54px;-webkit-mask-image:linear-gradient(180deg,transparent,#000 22%,#000 70%,transparent)}
+  #candles{position:absolute;left:0;right:0;bottom:0;width:100%;height:210px;opacity:.5;-webkit-mask-image:linear-gradient(180deg,transparent,#000 68%)}
+  .hero-in{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+  .h-eyebrow{font-family:var(--mono);font-size:14px;letter-spacing:.3em;color:var(--mint);font-weight:600;margin-bottom:24px}
+  h1{font-size:clamp(46px,7vw,92px);font-weight:800;letter-spacing:-.04em;line-height:.98}
+  h1 .m{color:var(--mint)}
+  .h-sub{color:var(--muted);font-size:clamp(16px,1.8vw,21px);margin-top:30px;max-width:500px}
+  .h-sub b{color:var(--text);font-weight:600}
+  .chips{display:flex;gap:11px;margin-top:38px;flex-wrap:wrap}
+  .chip{font-size:14.5px;font-weight:600;padding:10px 18px;border-radius:999px;border:1px solid var(--border2);display:flex;align-items:center;gap:8px}
+  .chip.pri{background:var(--mint);color:var(--mint-ink);border-color:transparent}
+  .chip .dot{width:7px;height:7px;border-radius:50%;background:var(--mint)}
+  .h-phones{position:relative;height:560px}
+  .ph{position:absolute;border-radius:34px;overflow:hidden;background:#0b1220;border:7px solid #16233c;
+    box-shadow:0 40px 80px -26px rgba(0,0,0,.75),0 0 0 1px rgba(45,224,197,.1)}
+  .ph img{display:block;width:100%}
+  .ph.center{width:250px;top:8px;left:50%;transform:translateX(-46%);z-index:3;
+    box-shadow:0 50px 100px -24px rgba(0,0,0,.82),0 0 0 1px rgba(45,224,197,.16);animation:float 6s ease-in-out infinite}
+  .ph.left{width:214px;top:70px;left:2px;transform:rotate(-7deg);z-index:2;opacity:.94;animation:float 6s ease-in-out infinite .8s}
+  .ph.right{width:214px;top:70px;right:2px;transform:rotate(7deg);z-index:2;opacity:.94;animation:float 6s ease-in-out infinite 1.6s}
+  @keyframes float{0%,100%{translate:0 0}50%{translate:0 -12px}}
+  @media (prefers-reduced-motion:reduce){.ph{animation:none!important}}
+  @media(max-width:900px){
+    .hero{padding-top:120px}
+    .hero-in{grid-template-columns:1fr;gap:20px}
+    .h-phones{height:440px;margin-top:10px}
+    .ph.center{width:210px}.ph.left,.ph.right{width:178px;top:56px}
+  }
+
+  /* STATS */
+  .stats{border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--surface2)}
+  .stats-in{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding:38px 24px;max-width:var(--maxw);margin:0 auto}
+  .stat{text-align:center}
+  .stat .n{font-size:clamp(24px,3.4vw,38px);font-weight:800;letter-spacing:-.03em}
+  .stat .n .u{color:var(--mint);font-size:.62em;margin-left:2px}
+  .stat .l{color:var(--muted);font-size:14px;margin-top:6px}
+  @media(max-width:640px){.stats-in{grid-template-columns:1fr 1fr;gap:26px 12px}}
+
+  section.blk{padding:100px 0}
+  .sec-head{margin-bottom:60px}
+
+  /* HOW */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+  .stp{background:linear-gradient(180deg,var(--surface),var(--surface2));border:1px solid var(--border);
+    border-radius:22px;padding:32px 28px;transition:transform .3s,border-color .3s}
+  .stp:hover{transform:translateY(-6px);border-color:var(--border2)}
+  .stp .num{font-family:var(--mono);font-size:19px;font-weight:700;color:var(--mint);
+    width:56px;height:56px;border-radius:50%;border:2px solid var(--mint);display:flex;align-items:center;justify-content:center;
+    box-shadow:0 0 26px rgba(45,224,197,.22);margin-bottom:24px}
+  .stp h3{font-size:23px;font-weight:700;letter-spacing:-.02em;margin-bottom:12px}
+  .stp p{color:var(--muted);font-size:16px}
+  .stp .tg{display:inline-block;margin-top:18px;font-family:var(--mono);font-size:12px;letter-spacing:.05em;color:var(--mint);border:1px solid var(--border);border-radius:7px;padding:6px 11px}
+  @media(max-width:820px){.steps{grid-template-columns:1fr}}
+
+  /* FEATURES */
+  .feat{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;margin-bottom:96px}
+  .feat:last-child{margin-bottom:0}
+  .feat.rev .f-txt{order:2}
+  .f-txt h3{font-size:clamp(24px,3vw,34px);font-weight:800;letter-spacing:-.03em;line-height:1.18}
+  .f-txt h3 .m{color:var(--mint)}
+  .f-txt p{color:var(--muted);font-size:17px;margin-top:16px}
+  .f-txt p b{color:var(--text);font-weight:600}
+  .f-list{list-style:none;margin-top:22px;display:flex;flex-direction:column;gap:12px}
+  .f-list li{display:flex;gap:11px;align-items:flex-start;color:var(--muted);font-size:15.5px}
+  .f-list li::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--mint);margin-top:9px;flex:none;box-shadow:0 0 0 4px rgba(45,224,197,.14)}
+  .f-shot{display:flex;justify-content:center}
+  .device{width:270px;border-radius:36px;overflow:hidden;background:#0b1220;border:8px solid #16233c;
+    box-shadow:0 40px 80px -28px rgba(0,0,0,.7),0 0 0 1px rgba(45,224,197,.09);position:relative}
+  .device img{display:block;width:100%}
+  @media(max-width:820px){.feat{grid-template-columns:1fr;gap:30px}.feat.rev .f-txt{order:0}.f-shot{order:-1}}
+
+  /* ANATOMY */
+  .ana{display:grid;grid-template-columns:480px 1fr;gap:64px;align-items:center}
+  .card{background:#fff;border-radius:22px;padding:26px 28px;color:#0E1726;box-shadow:0 40px 80px -28px rgba(0,0,0,.6);position:relative}
+  .card .ctop{display:flex;justify-content:space-between;align-items:flex-start}
+  .card .nm{width:150px;height:22px;border-radius:6px;background:linear-gradient(90deg,#dfe5ee,#eef1f6);margin-bottom:4px}
+  .card .cd{font-size:14px;color:#8b98ab}
+  .card .pr{font-size:24px;font-weight:800;text-align:right;letter-spacing:-.02em}
+  .card .cg{font-size:15px;font-weight:700;color:#DC2626;text-align:right}
+  .card .bd{display:inline-block;background:#E7F7F1;color:#0F766E;font-size:14px;font-weight:700;padding:6px 13px;border-radius:8px;margin:18px 0 14px}
+  .card .st{font-size:21px;font-weight:800;letter-spacing:-.02em;margin-bottom:7px}
+  .card .mt{font-size:14px;color:#5B6B82;margin-bottom:18px}
+  .card .lv{background:#F4F6FA;border-radius:13px;padding:16px 18px;display:grid;grid-template-columns:1fr 1fr 1fr}
+  .card .lv .k{font-size:12.5px;color:#8b98ab;margin-bottom:5px}
+  .card .lv .v{font-size:18px;font-weight:800;letter-spacing:-.02em}
+  .card .lv .red{color:#DC2626}.card .lv .grn{color:#16A34A}
+  .card .ft{font-size:12.5px;color:#9aa6b6;margin-top:11px}
+  .pin{position:absolute;left:-16px;width:32px;height:32px;border-radius:50%;background:var(--mint);color:var(--mint-ink);
+    font-family:var(--mono);font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 0 0 5px rgba(45,224,197,.16),0 5px 12px rgba(0,0,0,.4);transition:transform .2s}
+  .leg{list-style:none;display:flex;flex-direction:column;gap:20px}
+  .leg li{display:flex;gap:15px}
+  .leg .n{width:31px;height:31px;border-radius:50%;border:1.5px solid var(--mint);color:var(--mint);
+    font-family:var(--mono);font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none;transition:background .2s,color .2s}
+  .leg li:hover .n{background:var(--mint);color:var(--mint-ink)}
+  .leg .t{font-size:18px;font-weight:700;letter-spacing:-.02em;margin-bottom:2px}
+  .leg .d{color:var(--muted);font-size:15px}
+  @media(max-width:860px){.ana{grid-template-columns:1fr;gap:44px}.card{max-width:440px;margin:0 auto}}
+
+  /* GALLERY */
+  .gal{display:flex;gap:18px;overflow-x:auto;padding:6px 24px 20px;scroll-snap-type:x mandatory;max-width:100%}
+  .gal::-webkit-scrollbar{height:8px}.gal::-webkit-scrollbar-thumb{background:var(--border2);border-radius:8px}
+  .gal .g{flex:0 0 auto;width:210px;scroll-snap-align:center;text-align:center}
+  .gal .g .device{width:210px;margin-bottom:14px}
+  .gal .g .cap{font-size:14px;font-weight:600;color:var(--muted)}
+  .gal .g .cap .n{display:block;font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.15em;margin-bottom:5px}
+
+  /* FAQ */
+  .faq{max-width:780px;margin:0 auto}
+  .qa{border-bottom:1px solid var(--border)}
+  .qa button{width:100%;background:none;border:none;color:var(--text);font-family:inherit;font-size:18px;font-weight:600;
+    text-align:left;padding:24px 40px 24px 0;cursor:pointer;position:relative;letter-spacing:-.02em}
+  .qa button::after{content:"+";position:absolute;right:6px;top:50%;transform:translateY(-50%);color:var(--mint);font-size:24px;font-weight:400;transition:transform .3s}
+  .qa.open button::after{transform:translateY(-50%) rotate(45deg)}
+  .qa .a{max-height:0;overflow:hidden;transition:max-height .35s ease;color:var(--muted);font-size:16px}
+  .qa .a p{padding:0 0 24px}
+  .qa .a b{color:var(--text)}
+
+  /* DOWNLOAD */
+  .cta{text-align:center;background:radial-gradient(700px 300px at 50% 0%,rgba(45,224,197,.12),transparent 60%)}
+  .cta h2{font-size:clamp(30px,4.6vw,52px);font-weight:800;letter-spacing:-.03em}
+  .cta h2 .m{color:var(--mint)}
+  .cta .lead{margin:16px auto 34px}
+  .store{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+  .store .b{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:200px;
+    border:1px solid var(--border2);border-radius:16px;padding:16px 26px;background:var(--surface)}
+  .store .b .s{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--mint)}
+  .store .b .m{font-size:18px;font-weight:700}
+  .store .b .sub{font-size:13px;color:var(--faint)}
+
+  /* FOOTER */
+  footer{border-top:1px solid var(--border);background:var(--surface2);padding:60px 0 44px;margin-top:40px}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:40px}
+  .foot h4{font-size:15px;font-weight:700;margin-bottom:14px}
+  .foot p,.foot a,.foot span{color:var(--muted);font-size:14.5px}
+  .foot a{transition:color .2s}.foot a:hover{color:var(--mint)}
+  .foot .links{display:flex;flex-direction:column;gap:9px}
+  .disc{margin-top:36px;padding-top:24px;border-top:1px solid var(--border);color:var(--faint);font-size:12.5px;line-height:1.7}
+  .copy{margin-top:16px;color:var(--faint);font-size:12.5px}
+  @media(max-width:640px){.foot-grid{grid-template-columns:1fr;gap:28px}}
 </style>
 </head>
 <body>
-<div class="logo" aria-hidden="true"><span class="c c1"></span><span class="c c2"></span><span class="c c3"></span></div>
-<h1>시그널스톡</h1>
-<p class="sub">한국 주식 전 종목을 매일 스크리닝해 전략의 기술적 조건 충족 여부(매수·위험·청산 신호)와 그 근거를 알려주는 정보 제공 서비스입니다.</p>
 
-<div class="card">
-  <h2>문의 · 지원</h2>
-  <p>서비스 이용 문의는 앱 안의 <strong>프로필 → 문의하기</strong>로 접수해주세요. 접수된 문의는 앱 내 답변으로 안내됩니다.</p>
-</div>
-<div class="card">
-  <h2>법적 고지</h2>
-  <p><a href="./privacy-policy.html">개인정보처리방침</a> · <a href="./terms.html">이용약관</a></p>
+<nav id="nav">
+  <div class="nav-in">
+    <a href="#top" class="brand"><span class="mk"><i class="a"></i><i class="b"></i><i class="c"></i></span>시그널스톡</a>
+    <div class="nav-links">
+      <a href="#how">작동 원리</a>
+      <a href="#features">기능</a>
+      <a href="#faq">FAQ</a>
+      <a href="#download" class="nav-cta">App Store 심사 중</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="hero-bg">
+    <div class="glow"></div><div class="grid"></div>
+    <svg id="candles" viewBox="0 0 1440 210" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
+  <div class="wrap hero-in">
+    <div class="h-copy">
+      <div class="h-eyebrow reveal">한국 주식 · 매일 저녁 신호</div>
+      <h1 class="reveal">뭘 사고,<br>뭘 팔고,<br><span class="m">왜?</span></h1>
+      <p class="h-sub reveal">매일 저녁, 한국 주식 <b>3,700여 종목</b>을 대신 스크리닝해<br>오늘의 매수·청산 신호와 <b>그 근거·통계</b>를 알려드립니다.</p>
+      <div class="chips reveal">
+        <span class="chip pri">무료</span>
+        <span class="chip"><span class="dot"></span>iOS 심사 중</span>
+        <span class="chip">로그인 없이 체험</span>
+      </div>
+    </div>
+    <div class="h-phones reveal">
+      <div class="ph left"><img src="assets/screenshots/02-signal-why.png" alt="신호의 이유" loading="lazy"></div>
+      <div class="ph right"><img src="assets/screenshots/04-chart-levels.png" alt="차트와 기준선" loading="lazy"></div>
+      <div class="ph center"><img src="assets/screenshots/01-home-feed.png" alt="오늘의 신호 피드" loading="lazy"></div>
+    </div>
+  </div>
+</header>
+
+<div class="stats">
+  <div class="stats-in">
+    <div class="stat reveal"><div class="n">3,700<span class="u">+</span></div><div class="l">코스피·코스닥·ETF 전 종목</div></div>
+    <div class="stat reveal"><div class="n">매 거래일</div><div class="l">저녁, 자동 스크리닝</div></div>
+    <div class="stat reveal"><div class="n">수십 종</div><div class="l">검증된 전략 규칙</div></div>
+    <div class="stat reveal"><div class="n">0<span class="u">원</span></div><div class="l">현재 모든 기능 무료</div></div>
+  </div>
 </div>
 
-<p class="disclaimer">시그널스톡은 특정 전략의 기술적 조건 충족 여부를 알려주는 정보 제공 목적의 서비스이며, 투자 권유·자문이 아닙니다. 모든 투자 판단과 책임은 이용자 본인에게 있습니다. 과거 성과는 미래 수익을 보장하지 않습니다.</p>
+<section class="blk" id="how">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="eyebrow">어떻게 작동하나요</div>
+      <h2 class="title">매일 저녁, <span class="m">이렇게</span> 도착합니다.</h2>
+    </div>
+    <div class="steps">
+      <div class="stp reveal"><div class="num">01</div><h3>장 마감</h3><p>매 거래일 저녁, 코스피·코스닥·ETF <b style="color:var(--text)">전 종목의 종가</b>를 수집합니다.</p><span class="tg">평일 · 종가 확정 후</span></div>
+      <div class="stp reveal"><div class="num">02</div><h3>전 종목 스크리닝</h3><p>수십 개 <b style="color:var(--text)">검증된 전략 규칙</b>을 3,700여 종목에 똑같이 적용해 조건을 확인합니다.</p><span class="tg">전략 × 전 종목</span></div>
+      <div class="stp reveal"><div class="num">03</div><h3>신호 도착</h3><p>조건을 충족한 종목과 <b style="color:var(--text)">그 근거</b>가 피드로. 원하면 <b style="color:var(--text)">푸시 알림</b>으로도.</p><span class="tg">저녁 7시 전후</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="blk" id="features" style="background:var(--surface2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="eyebrow">무엇을 할 수 있나요</div>
+      <h2 class="title">신호부터 <span class="m">근거</span>까지, 한 앱에서.</h2>
+    </div>
+
+    <div class="feat reveal">
+      <div class="f-txt">
+        <h3>매일 저녁, <span class="m">신호가 도착</span>합니다</h3>
+        <p>장 마감 후 <b>전 종목</b>을 대신 스크리닝해 오늘 조건을 충족한 종목만 골라 드립니다.</p>
+        <ul class="f-list">
+          <li>진입·손절·목표 참고가 자동 계산</li>
+          <li>신호 성적표로 최근 승률 확인</li>
+          <li>매수·청산·위험 알림 푸시</li>
+        </ul>
+      </div>
+      <div class="f-shot"><div class="device"><img src="assets/screenshots/01-home-feed.png" alt="오늘의 신호" loading="lazy"></div></div>
+    </div>
+
+    <div class="feat rev reveal">
+      <div class="f-txt">
+        <h3>모든 신호에 <span class="m">"왜"</span>가 붙어 있습니다</h3>
+        <p>어떤 전략이 어떤 조건으로, 과거엔 어떤 성적이었는지 <b>신호마다 투명하게</b>. 추천이 아니라 당신이 직접 판단할 통계를 드립니다.</p>
+        <ul class="f-list">
+          <li>대표 전략의 승률·샤프·거래 표본</li>
+          <li>여러 전략 합치도로 신뢰도 판단</li>
+          <li>상대강도·시장 국면까지 반영</li>
+        </ul>
+      </div>
+      <div class="f-shot"><div class="device"><img src="assets/screenshots/02-signal-why.png" alt="신호의 이유" loading="lazy"></div></div>
+    </div>
+
+    <div class="feat reveal">
+      <div class="f-txt">
+        <h3>따라 하기 전에, <span class="m">먼저 검증</span></h3>
+        <p>마음에 든 전략을 원하는 종목·기간에 백테스트. 표본이 적으면 <b>"아직 신뢰하기 어렵다"</b>고 솔직하게 말합니다.</p>
+        <ul class="f-list">
+          <li>승률·손익비·최대낙폭·샤프</li>
+          <li>몬테카를로·신뢰구간으로 운/실력 구분</li>
+          <li>코딩 없이 나만의 전략도 직접</li>
+        </ul>
+      </div>
+      <div class="f-shot"><div class="device"><img src="assets/screenshots/03-backtest.png" alt="백테스트" loading="lazy"></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="blk" id="anatomy">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="eyebrow">신호 한 장, 이렇게 읽습니다</div>
+      <h2 class="title">숫자 하나에 <span class="m">근거</span>가 다 붙어 있습니다.</h2>
+      <p class="lead">추천이 아니라, 당신이 직접 판단할 재료.</p>
+    </div>
+    <div class="ana">
+      <div class="card reveal">
+        <div class="ctop">
+          <div><div class="nm"></div><div class="cd">종목 · 코드</div></div>
+          <div><div class="pr">34,750원</div><div class="cg">▼ 13.66%</div></div>
+        </div>
+        <div class="bd">오늘 6개 전략 신호</div>
+        <div class="st">회귀 기울기 가속</div>
+        <div class="mt">백테스트(600일) 승률 88% · 샤프 2.79 · 이 종목 8거래</div>
+        <div class="lv">
+          <div><div class="k">진입 (07.15)</div><div class="v">40,250원</div></div>
+          <div><div class="k">손절</div><div class="v red">34,243원</div></div>
+          <div><div class="k">목표 (3R)</div><div class="v grn">58,271원</div></div>
+        </div>
+        <div class="ft">전략 규칙 참고값 · 과거 성과는 미래 보장 없음</div>
+        <div class="pin" style="top:82px">1</div>
+        <div class="pin" style="top:126px">2</div>
+        <div class="pin" style="top:210px">3</div>
+        <div class="pin" style="top:262px">4</div>
+      </div>
+      <ul class="leg reveal">
+        <li><span class="n">1</span><div><div class="t">오늘 몇 개 전략이 걸렸나</div><div class="d">여러 전략이 동시에 포착할수록 합치도가 높은 신호</div></div></li>
+        <li><span class="n">2</span><div><div class="t">대표 전략 + 과거 성적</div><div class="d">승률·샤프·거래 표본까지 — 얼마나 믿을 만한지</div></div></li>
+        <li><span class="n">3</span><div><div class="t">진입·손절·목표, 자동 계산</div><div class="d">전략 규칙에 따른 참고가를 한눈에</div></div></li>
+        <li><span class="n">4</span><div><div class="t">정직한 고지</div><div class="d">표본이 적으면 통계를 생략하고, 미래를 약속하지 않습니다</div></div></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="blk" id="screens" style="background:var(--surface2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding-bottom:60px">
+  <div class="wrap">
+    <div class="sec-head reveal" style="text-align:center">
+      <div class="eyebrow">화면 미리보기</div>
+      <h2 class="title">직접 둘러보세요</h2>
+    </div>
+  </div>
+  <div class="gal reveal">
+    <div class="g"><div class="device"><img src="assets/screenshots/01-home-feed.png" loading="lazy" alt="오늘의 신호"></div><div class="cap"><span class="n">01</span>오늘의 신호</div></div>
+    <div class="g"><div class="device"><img src="assets/screenshots/02-signal-why.png" loading="lazy" alt="신호의 이유"></div><div class="cap"><span class="n">02</span>신호의 이유</div></div>
+    <div class="g"><div class="device"><img src="assets/screenshots/03-backtest.png" loading="lazy" alt="백테스트"></div><div class="cap"><span class="n">03</span>백테스트</div></div>
+    <div class="g"><div class="device"><img src="assets/screenshots/04-chart-levels.png" loading="lazy" alt="차트·기준선"></div><div class="cap"><span class="n">04</span>차트·기준선</div></div>
+    <div class="g"><div class="device"><img src="assets/screenshots/05-strategy-compare.png" loading="lazy" alt="전략 비교"></div><div class="cap"><span class="n">05</span>전략 비교</div></div>
+  </div>
+</section>
+
+<section class="blk" id="faq">
+  <div class="wrap">
+    <div class="sec-head reveal" style="text-align:center">
+      <div class="eyebrow">자주 묻는 질문</div>
+      <h2 class="title">궁금한 점</h2>
+    </div>
+    <div class="faq reveal">
+      <div class="qa"><button>자동으로 매매해주는 앱인가요?</button><div class="a"><p>아니요. 시그널스톡은 매매를 실행하지 않습니다. 전략 규칙의 <b>조건 충족 여부와 통계</b>를 보여주는 <b>정보 제공 앱</b>이며, 실제 매매는 이용하시는 증권사 앱에서 직접 하시게 됩니다.</p></div></div>
+      <div class="qa"><button>종목을 추천해주는 건가요?</button><div class="a"><p>아니요. 특정 종목의 매수·매도를 권유하지 않습니다. 이용자가 선택한 알고리즘 규칙을 전 종목에 동일하게 적용한 <b>통계 정보</b>를 보여드릴 뿐이며, 투자 판단은 이용자 본인의 몫입니다.</p></div></div>
+      <div class="qa"><button>어떤 전략을 쓰나요?</button><div class="a"><p>추세추종·평균회귀·돌파·거래량 등 <b>검증된 전략 수십 종</b>을 제공합니다. 이동평균·RSI·볼린저밴드 같은 지표를 조합해 <b>나만의 전략을 직접</b> 만들 수도 있고, 저장 전에 바로 백테스트로 확인할 수 있습니다.</p></div></div>
+      <div class="qa"><button>정말 무료인가요?</button><div class="a"><p>네. 현재 모든 기능이 무료입니다. 로그인만 하면 제한 없이 사용할 수 있습니다.</p></div></div>
+      <div class="qa"><button>어떤 시장을 다루나요?</button><div class="a"><p>한국 주식(코스피·코스닥)과 국내 상장 ETF의 일봉 데이터를 다룹니다.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="blk cta" id="download">
+  <div class="wrap reveal">
+    <h2>오늘 뭘 사고, 뭘 팔고, <span class="m">왜?</span></h2>
+    <p class="lead">출시되는 대로 여기서 받을 수 있습니다.</p>
+    <div class="store">
+      <div class="b"><span class="s">iOS · APP STORE</span><span class="m">심사 진행 중</span><span class="sub">출시되면 링크가 올라옵니다</span></div>
+      <div class="b"><span class="s">ANDROID · GOOGLE PLAY</span><span class="m">준비 중</span><span class="sub">뒤이어 출시 예정</span></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot">
+        <div class="brand" style="margin-bottom:14px"><span class="mk"><i class="a"></i><i class="b"></i><i class="c"></i></span>시그널스톡</div>
+        <p>한국 주식 전 종목을 매일 스크리닝해 매수·위험·청산 신호와 그 근거를 알려주는 정보 제공 서비스입니다.</p>
+      </div>
+      <div class="foot">
+        <h4>지원 · 문의</h4>
+        <div class="links">
+          <span>앱 내 <b style="color:var(--text)">프로필 → 문의하기</b></span>
+          <a href="mailto:tutmr999@naver.com">tutmr999@naver.com</a>
+          <a href="./privacy-policy.html">개인정보처리방침</a>
+          <a href="./terms.html">이용약관</a>
+        </div>
+      </div>
+    </div>
+    <p class="disc">시그널스톡이 제공하는 신호·백테스트·전략 비교는 이용자가 선택하거나 설정한 알고리즘을 전 종목에 동일하게 적용한 통계 정보이며, 특정 종목의 매수·매도를 권유하거나 개인별로 맞춤 자문하는 것이 아닙니다. 모든 투자 판단과 그 결과에 대한 책임은 이용자 본인에게 있으며, 과거 성과는 미래 수익을 보장하지 않습니다.</p>
+    <p class="copy">© <span id="yr">2026</span> 시그널스톡 (SignalStock)</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  var svg=document.getElementById('candles');
+  if(svg){
+    var x=10, seed=11, out='';
+    function rnd(){seed=(seed*1103515245+12345)&0x7fffffff;return (seed>>8)/0x7fffff;}
+    while(x<1440){
+      var w=8, body=16+rnd()*66, wick=body+12+rnd()*28, up=rnd()>0.5,
+          col=up?'#25603f':'#5a2b2b', cy=105+(rnd()-0.5)*54, top=cy-body/2;
+      out+='<line x1="'+(x+w/2)+'" y1="'+(cy-wick/2)+'" x2="'+(x+w/2)+'" y2="'+(cy+wick/2)+'" stroke="'+col+'" stroke-width="2"/>';
+      out+='<rect x="'+x+'" y="'+top+'" width="'+w+'" height="'+body+'" rx="2" fill="'+col+'"/>';
+      x+=w+8;
+    }
+    svg.innerHTML=out;
+  }
+
+  var nav=document.getElementById('nav');
+  function onScroll(){ nav.classList.toggle('solid', window.scrollY>24); }
+  onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
+
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  }, {threshold:0.12, rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.reveal').forEach(function(el,i){
+    el.style.transitionDelay=(Math.min(i%3,2)*0.08)+'s';
+    io.observe(el);
+  });
+
+  document.querySelectorAll('.qa button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var qa=btn.parentElement, a=qa.querySelector('.a'), open=qa.classList.contains('open');
+      document.querySelectorAll('.qa.open').forEach(function(o){ o.classList.remove('open'); o.querySelector('.a').style.maxHeight=null; });
+      if(!open){ qa.classList.add('open'); a.style.maxHeight=a.scrollHeight+'px'; }
+    });
+  });
+})();
+</script>
 </body>
 </html>
