@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<style>
+  :root{--mint:#2DE0C5;--text:#F3F7FC;--muted:#93A4C0;--faint:#5D6B84;--border:#22344F;--line:#1c2b45}
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1360px;height:560px;overflow:hidden}
+  body{font-family:'Apple SD Gothic Neo',sans-serif;
+    background:
+      radial-gradient(900px 500px at 15% -10%, rgba(45,224,197,.07), transparent 60%),
+      linear-gradient(180deg,#070C15,#0A1322);
+    color:var(--text);padding:70px 92px 0}
+  .eyebrow{font-family:'Menlo',monospace;font-size:14px;letter-spacing:5px;color:var(--mint);font-weight:600;margin-bottom:18px}
+  h2{font-size:52px;font-weight:800;letter-spacing:-1.8px;margin-bottom:56px}
+  h2 .m{color:var(--mint)}
+
+  .steps{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;position:relative}
+  /* 연결선 */
+  .steps::before{content:"";position:absolute;top:33px;left:12%;right:12%;height:2px;
+    background:repeating-linear-gradient(90deg,var(--faint) 0 8px,transparent 8px 18px);opacity:.6}
+  .step{padding-right:54px}
+  .num{width:66px;height:66px;border-radius:50%;background:#0d1a30;border:2px solid var(--mint);
+    display:flex;align-items:center;justify-content:center;position:relative;z-index:2;
+    font-family:'Menlo',monospace;font-size:24px;font-weight:700;color:var(--mint);
+    box-shadow:0 0 0 8px #070f1c, 0 0 34px rgba(45,224,197,.25)}
+  .step h3{font-size:28px;font-weight:700;letter-spacing:-.6px;margin:34px 0 16px}
+  .step p{font-size:18px;line-height:1.66;color:var(--muted)}
+  .step p b{color:var(--text);font-weight:600}
+  .step .tag{display:inline-block;margin-top:20px;font-family:'Menlo',monospace;font-size:13px;
+    letter-spacing:1px;color:var(--mint);border:1px solid var(--border);border-radius:8px;padding:7px 13px}
+</style></head>
+<body>
+  <div class="eyebrow">어떻게 작동하나요</div>
+  <h2>매일 저녁, <span class="m">이렇게</span> 도착합니다.</h2>
+
+  <div class="steps">
+    <div class="step">
+      <div class="num">01</div>
+      <h3>장 마감</h3>
+      <p>매 거래일 저녁, 코스피·코스닥·ETF <b>전 종목의 종가</b>를 수집합니다.</p>
+      <div class="tag">평일 · 종가 확정 후</div>
+    </div>
+    <div class="step">
+      <div class="num">02</div>
+      <h3>전 종목 스크리닝</h3>
+      <p>수십 개 <b>검증된 전략 규칙</b>을 3,700여 종목에 똑같이 적용해 조건을 확인합니다.</p>
+      <div class="tag">전략 × 전 종목 사전계산</div>
+    </div>
+    <div class="step">
+      <div class="num">03</div>
+      <h3>신호 도착</h3>
+      <p>조건을 충족한 종목과 <b>그 근거</b>가 피드로. 원하면 <b>푸시 알림</b>으로도.</p>
+      <div class="tag">저녁 7시 전후</div>
+    </div>
+  </div>
+</body></html>

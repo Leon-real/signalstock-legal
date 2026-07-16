@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<style>
+  :root{--mint:#2DE0C5;--text:#F3F7FC;--muted:#93A4C0;--faint:#5D6B84;--border:#22344F}
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1360px;height:720px;overflow:hidden}
+  body{font-family:'Apple SD Gothic Neo',sans-serif;
+    background:
+      radial-gradient(800px 500px at 80% 110%, rgba(45,224,197,.07), transparent 60%),
+      linear-gradient(180deg,#0A1322,#070C15);
+    color:var(--text);padding:66px 92px 0;display:grid;grid-template-columns:520px 1fr;gap:70px;align-items:center}
+
+  /* 좌: 재현한 신호 카드(라이트) */
+  .cardwrap{position:relative}
+  .card{background:#fff;border-radius:22px;padding:28px 30px 26px;
+    box-shadow:0 40px 80px -28px rgba(0,0,0,.7);color:#0E1726}
+  .top{display:flex;justify-content:space-between;align-items:flex-start}
+  .nm{width:180px;height:26px;border-radius:7px;
+    background:linear-gradient(90deg,#dfe5ee,#eef1f6);margin-bottom:2px}
+  .code{font-size:15px;color:#8b98ab}
+  .price{font-size:27px;font-weight:800;text-align:right;letter-spacing:-.5px}
+  .chg{font-size:16px;font-weight:700;color:#DC2626;text-align:right}
+  .badge{display:inline-block;background:#E7F7F1;color:#0F766E;font-size:15px;font-weight:700;
+    padding:7px 14px;border-radius:9px;margin:20px 0 16px}
+  .stg{font-size:23px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px}
+  .meta{font-size:15px;color:#5B6B82;margin-bottom:20px}
+  .lv{background:#F4F6FA;border-radius:14px;padding:18px 20px;display:grid;grid-template-columns:1fr 1fr 1fr}
+  .lv .k{font-size:14px;color:#8b98ab;margin-bottom:6px}
+  .lv .v{font-size:20px;font-weight:800;letter-spacing:-.5px}
+  .lv .red{color:#DC2626}.lv .grn{color:#16A34A}
+  .foot{font-size:13px;color:#9aa6b6;margin-top:12px}
+
+  /* 카드 위 번호 뱃지 */
+  .pin{position:absolute;width:34px;height:34px;border-radius:50%;background:var(--mint);
+    color:#04231D;font-family:'Menlo',monospace;font-size:17px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;z-index:5;
+    box-shadow:0 0 0 5px rgba(45,224,197,.18),0 6px 14px rgba(0,0,0,.4)}
+
+  /* 우: 번호 설명 */
+  .legend h2{font-size:46px;font-weight:800;letter-spacing:-1.6px;line-height:1.1;margin-bottom:12px}
+  .legend h2 .m{color:var(--mint)}
+  .legend .eyebrow{font-family:'Menlo',monospace;font-size:14px;letter-spacing:5px;color:var(--mint);font-weight:600;margin-bottom:18px}
+  .legend .lead{font-size:18px;color:var(--muted);margin-bottom:34px;line-height:1.6}
+  .li{display:flex;gap:16px;margin-bottom:22px}
+  .li .n{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--mint);color:var(--mint);
+    font-family:'Menlo',monospace;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none}
+  .li .t{font-size:19px;font-weight:700;margin-bottom:3px;letter-spacing:-.3px}
+  .li .d{font-size:16px;color:var(--muted);line-height:1.55}
+</style></head>
+<body>
+  <div class="cardwrap">
+    <div class="card">
+      <div class="top">
+        <div><div class="nm"></div><div class="code">종목 · 코드</div></div>
+        <div><div class="price">34,750원</div><div class="chg">▼ 13.66%</div></div>
+      </div>
+      <div class="badge">오늘 6개 전략 신호</div>
+      <div class="stg">회귀 기울기 가속</div>
+      <div class="meta">백테스트(600일) 승률 88% · 샤프 2.79 · 이 종목 8거래</div>
+      <div class="lv">
+        <div><div class="k">진입 (07.15)</div><div class="v">40,250원</div></div>
+        <div><div class="k">손절</div><div class="v red">34,243원</div></div>
+        <div><div class="k">목표 (3R)</div><div class="v grn">58,271원</div></div>
+      </div>
+      <div class="foot">전략 규칙 참고값 · 과거 성과는 미래 보장 없음</div>
+    </div>
+    <div class="pin" style="top:91px;left:-18px">1</div>
+    <div class="pin" style="top:139px;left:-18px">2</div>
+    <div class="pin" style="top:228px;left:-18px">3</div>
+    <div class="pin" style="top:285px;left:-18px">4</div>
+  </div>
+
+  <div class="legend">
+    <div class="eyebrow">신호 한 장, 이렇게 읽습니다</div>
+    <h2>숫자 하나에<br><span class="m">근거</span>가 다 붙어 있습니다.</h2>
+    <div class="lead">추천이 아니라, 당신이 직접 판단할 재료.</div>
+    <div class="li"><div class="n">1</div><div><div class="t">오늘 몇 개 전략이 걸렸나</div><div class="d">여러 전략이 동시에 포착할수록 합치도가 높은 신호</div></div></div>
+    <div class="li"><div class="n">2</div><div><div class="t">대표 전략 + 과거 성적</div><div class="d">승률·샤프·거래 표본까지 — 얼마나 믿을 만한지</div></div></div>
+    <div class="li"><div class="n">3</div><div><div class="t">진입·손절·목표, 자동 계산</div><div class="d">전략 규칙에 따른 참고가를 한눈에</div></div></div>
+    <div class="li"><div class="n">4</div><div><div class="t">정직한 고지</div><div class="d">표본이 적으면 통계를 생략하고, 미래를 약속하지 않습니다</div></div></div>
+  </div>
+</body></html>
