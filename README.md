@@ -4,6 +4,12 @@
 
 <br><br>
 
+### [웹사이트에서 보기 →](https://leon-real.github.io/signalstock-legal/)
+
+스크롤·애니메이션까지 담은 소개 페이지 · `leon-real.github.io/signalstock-legal`
+
+<br>
+
 ### 움직이는 화면으로 먼저 보기
 
 <img src="assets/demo.gif" alt="시그널스톡 앱 시연 — 오늘의 신호 피드, 신호의 이유, 차트, 백테스트" width="300">
@@ -94,12 +100,15 @@
 
 <br>
 
-## 지원 · 문의
+## 링크
 
-- 앱 내 **프로필 → 문의하기** 로 접수 (앱 내 답변으로 안내)
-- 또는 이메일 **[tutmr999@naver.com](mailto:tutmr999@naver.com)** 으로 문의해주세요
-
-**[지원 페이지](https://leon-real.github.io/signalstock-legal/)** · **[개인정보처리방침](https://leon-real.github.io/signalstock-legal/privacy-policy.html)** · **[이용약관](https://leon-real.github.io/signalstock-legal/terms.html)**
+| | 주소 |
+|---|---|
+| **웹사이트 (소개·지원)** | https://leon-real.github.io/signalstock-legal/ |
+| 개인정보처리방침 | https://leon-real.github.io/signalstock-legal/privacy-policy.html |
+| 이용약관 | https://leon-real.github.io/signalstock-legal/terms.html |
+| 문의 | [tutmr999@naver.com](mailto:tutmr999@naver.com) · 또는 앱 내 **프로필 → 문의하기** |
+| iOS · App Store | 심사 진행 중 (출시되는 대로 이곳에 링크 추가) |
 
 <br>
 
