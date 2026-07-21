@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>시그널스톡 — 계정 및 데이터 삭제 요청</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; line-height: 1.7;
+         max-width: 720px; margin: 0 auto; padding: 32px 20px 64px; color: #0E1726; background: #F6F8FB; }
+  @media (prefers-color-scheme: dark) { body { color: #EAF0F7; background: #0B1220; } h1, h2 { color: #EAF0F7; } .meta { color: #8593A8; } .box { background: #111A2B; border-color: #223047; } .box b { color: #EAF0F7; } table { border-color: #223047; } th, td { border-color: #223047; } th { background: #111A2B; } }
+  h1 { font-size: 24px; margin-bottom: 4px; }
+  h2 { font-size: 17px; margin-top: 28px; }
+  .meta { color: #5B6B82; font-size: 13px; margin-bottom: 24px; }
+  p, li { font-size: 15px; }
+  ol li { margin-bottom: 6px; }
+  .box { background: #fff; border: 1px solid #E2E8F0; border-radius: 10px; padding: 16px 18px; margin: 16px 0; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 4px; font-size: 14px; }
+  th, td { border: 1px solid #E2E8F0; padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { background: #EDF1F7; font-weight: 700; }
+  code { background: rgba(133,147,168,0.18); padding: 1px 5px; border-radius: 4px; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<h1>계정 및 데이터 삭제 요청</h1>
+<p class="meta">앱: <b>시그널스톡</b> (SignalStock) · 개발자: <b>GyungMin Kim</b> · 최종 업데이트: 2026-07-21</p>
+
+<p><b>시그널스톡</b> 이용자는 언제든지 계정과 관련 데이터의 삭제를 요청할 수 있습니다. 삭제는 앱 안에서 즉시 처리되며, 별도의 승인 절차나 대기 없이 완료됩니다.</p>
+
+<h2>방법 1. 앱에서 직접 삭제 (권장 · 즉시 처리)</h2>
+<div class="box">
+<ol>
+  <li>시그널스톡 앱을 실행하고 로그인합니다.</li>
+  <li>하단 탭에서 <b>프로필</b>을 선택합니다.</li>
+  <li><b>기본 정보 수정</b>을 누릅니다.</li>
+  <li>화면 아래의 <b>탈퇴하기</b>를 누릅니다.</li>
+  <li>안내 문구를 확인하고 <b>확인</b>을 누르면 계정과 데이터가 <b>즉시 삭제</b>됩니다.</li>
+</ol>
+</div>
+
+<h2>방법 2. 이메일로 삭제 요청</h2>
+<p>앱에 접근할 수 없는 경우, 가입에 사용한 이메일 주소로 아래 주소에 요청해 주세요. 본인 확인 후 <b>영업일 기준 7일 이내</b>에 처리하고 회신드립니다.</p>
+<div class="box">
+  <p style="margin:0">문의: <b>tutmr999@naver.com</b><br>
+  제목 예시: <code>[시그널스톡] 계정 삭제 요청</code><br>
+  본문에 가입 이메일 주소를 적어주세요.</p>
+</div>
+
+<h2>삭제되는 데이터</h2>
+<p>탈퇴 시 아래 데이터가 <b>서버에서 즉시 영구 삭제</b>되며 복구되지 않습니다.</p>
+<table>
+  <tr><th>구분</th><th>내용</th></tr>
+  <tr><td>계정 정보</td><td>이메일 주소, 로그인 인증 정보, 프로필 표시명 등 계정 식별 정보</td></tr>
+  <tr><td>이용 데이터</td><td>추적 종목·관심 종목, 종목 알림(watch) 설정, 직접 만든 전략(커스텀 조건), 전략 팔로우 내역</td></tr>
+  <tr><td>알림</td><td>기기 푸시 토큰, 알림 설정, 알림 발송 기록</td></tr>
+  <tr><td>광장(커뮤니티)</td><td>작성한 게시글·댓글, 반응(좋아요), 신고 내역, 커뮤니티 이용 동의 기록, 차단 목록</td></tr>
+  <tr><td>고객 지원</td><td>앱 내 문의하기로 접수한 문의 내용 및 첨부 사진</td></tr>
+</table>
+
+<h2>삭제되지 않거나 별도로 보관되는 데이터</h2>
+<table>
+  <tr><th>항목</th><th>사유 및 보관 기간</th></tr>
+  <tr><td>전략별 신호 계산 결과</td><td>특정 개인의 데이터가 아니라 <b>(전략 × 종목)</b> 단위의 공용 계산 결과이며, 개인을 식별할 수 있는 정보가 포함되지 않습니다. 따라서 탈퇴와 무관하게 유지됩니다.</td></tr>
+  <tr><td>주가·지수 등 시장 데이터</td><td>공개된 시장 정보로, 이용자 개인정보와 무관합니다.</td></tr>
+  <tr><td>이미 메일로 발송된 문의 사본</td><td>발송 시스템의 기술적 특성상 즉시 회수가 불가능하며, <b>최대 1년</b> 보관 후 파기됩니다.</td></tr>
+  <tr><td>서버 접속·오류 로그</td><td>서비스 보안 및 장애 대응 목적의 기록으로, 개인 식별 정보를 포함하지 않는 범위에서 <b>최대 3개월</b> 보관 후 자동 삭제됩니다.</td></tr>
+</table>
+
+<h2>참고</h2>
+<p>계정을 유지한 채 일부 데이터만 선택적으로 삭제하는 기능은 제공하지 않습니다. 다만 추적 종목·관심 종목·작성한 게시글 등은 앱 안에서 개별적으로 해제하거나 삭제할 수 있습니다.</p>
+<p>개인정보 처리에 관한 자세한 사항은 <a href="./privacy-policy.html">개인정보처리방침</a>을, 서비스 이용 조건은 <a href="./terms.html">이용약관</a>을 참고해 주세요.</p>
+
+</body>
+</html>
