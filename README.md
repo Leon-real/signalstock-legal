@@ -96,7 +96,7 @@
 ## 다운로드
 
 **iOS · App Store** — **출시됐습니다!** → **[App Store에서 다운로드](https://apps.apple.com/kr/app/id6789863393)**
-**Android · Google Play** — 준비 중입니다.
+**Android · Google Play** — 현재 비공개 테스트 중이며, 정식 출시를 준비하고 있습니다.
 
 <br>
 
@@ -107,6 +107,7 @@
 | **웹사이트 (소개·지원)** | https://leon-real.github.io/signalstock-legal/ |
 | 개인정보처리방침 | https://leon-real.github.io/signalstock-legal/privacy-policy.html |
 | 이용약관 | https://leon-real.github.io/signalstock-legal/terms.html |
+| 계정 삭제 요청 | https://leon-real.github.io/signalstock-legal/account-deletion.html |
 | 문의 | [tutmr999@naver.com](mailto:tutmr999@naver.com) · 또는 앱 내 **프로필 → 문의하기** |
 | **iOS · App Store (출시됨)** | https://apps.apple.com/kr/app/id6789863393 |
 
